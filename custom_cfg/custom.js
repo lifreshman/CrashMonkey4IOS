@@ -39,11 +39,9 @@ monkey.config.frame = {
 
 //UI Holes handlers
 var handlers = [];
-handlers.push(new ButtonHandler("WBBack", 10, true));
-handlers.push(new WBScrollViewButtonHandler("weatherLeftBack", 5, false, 1));
-handlers.push(new ButtonHandler("取消", 3, true));
-handlers.push(new ButtonHandler("CloseX", 3, true));
-handlers.push(new ButtonHandler("确定", 3, false));
+//设置点击关闭和返回的次数，value越大权重越低
+handlers.push(new ButtonHandler("nav back", 8, true));
+handlers.push(new ButtonHandler("关闭", 10, true));
 
 monkey.config.conditionHandlers = handlers;
 
