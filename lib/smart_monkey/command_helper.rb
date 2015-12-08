@@ -10,6 +10,7 @@ module UIAutoMonkey
 
     def is_simulator
       deviceinfo = instruments_deviceinfo(device)
+      puts "deviceinfo #{deviceinfo}"
       if deviceinfo.include? "－"
         true
       else
@@ -33,7 +34,6 @@ module UIAutoMonkey
     def relaunch_app(device,app)
       puts "is simulator #{is_simulator}"
       if is_simulator
-        puts "xcrun simctl launch #{device}  #{app}"
         `xcrun simctl launch #{device}  #{app} >/dev/null 2>&1 &`
       else
         `idevicedebug -u #{device} run #{app} >/dev/null 2>&1 &`
