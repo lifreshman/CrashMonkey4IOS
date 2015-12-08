@@ -5,12 +5,11 @@ module UIAutoMonkey
     require 'open3'
 
     def instruments_deviceinfo(device)
-      `instruments -s devices | grep "#{device}"`.strip
+      `"instruments" -s devices | grep "#{device}"`.strip
     end
 
     def is_simulator
       deviceinfo = instruments_deviceinfo(device)
-      puts "deviceinfo #{deviceinfo}"
       if deviceinfo.include? "－"
         true
       else

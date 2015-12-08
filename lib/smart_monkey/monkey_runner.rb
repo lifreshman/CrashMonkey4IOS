@@ -234,7 +234,7 @@ module UIAutoMonkey
 
     def is_simulator
       deviceinfo = instruments_deviceinfo(device)
-      if deviceinfo.include? "Simulator"
+      if deviceinfo.include? "-"
         true
       else
         false
