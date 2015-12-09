@@ -26,14 +26,15 @@
 //  handlers.push(new ButtonHandler("Done", handlerInterval, false));  //every 20 events, press "Done" button if found as a top level button (no nav bar). 
 //  ...
 //  config.conditionHandlers = handlers
-//  
-function ButtonHandler(buttonName, checkEveryNumber, useNavBar, optionalIsTrueFunction) {
+//  optionalEventType：0<->back;  1<->我的；
+function ButtonHandler(buttonName, checkEveryNumber, useNavBar, optionalEventType, optionalIsTrueFunction) {
 	this.buttonName = buttonName;
 	this.checkEveryNumber = checkEveryNumber || 10;
 	if (useNavBar == undefined) {
 		useNavBar = true;
 	};
 	this.useNavBar = useNavBar;
+	this.optionalEventType = optionalEventType || 0;
 	this.optionalIsTrueFunction = optionalIsTrueFunction || null;
 	//stats
 	this.statsIsTrueInvokedCount = 0;
@@ -64,9 +65,16 @@ ButtonHandler.prototype.isTrue = function(target, eventCount, mainWindow) {
 };
 
 ButtonHandler.prototype.findButton = function(target) {
-	return this.useNavBar ? 
+	switch(this.optionalEventType){
+		case 0:
+			return this.useNavBar ? 
 	    target.frontMostApp().mainWindow().navigationBar().buttons()[this.buttonName] :
-        target.frontMostApp().mainWindow().buttons()[this.buttonName];	
+        target.frontMostApp().mainWindow().buttons()[this.buttonName];
+        break;
+        case 1:
+        	return target.frontMostApp().tabBar().buttons()[this.buttonName];
+        	break;        
+	}		
 };
 	
 //every checkEvery() number of events our isTrue() method will be queried.

@@ -6,9 +6,10 @@
 //Usage
 //  var handlers = [ ];
 //  var handlerInterval = 20;  //every how many events to process. Can vary by each handler, but often useful to group them
-//  handlers.push(new ButtonHandler("Done", handlerInterval, false));  //every 20 events, press "Done" button if found as a top level button (no nav bar).
+//  handlers.push(new LogOutHandler("Done", handlerInterval, false));  //every 20 events, press "Done" button if found as a top level button (no nav bar).
 //  ...
 //  config.conditionHandlers = handlers
+//  if find logoutTitle, then will tap back button;
 //
 function LogOutHandler(titleName, useNavBar, closeButtonName) {
     this.titleName = titleName;
@@ -29,7 +30,7 @@ function LogOutHandler(titleName, useNavBar, closeButtonName) {
 }
 
 // return true if we our button is visible
-ButtonHandler.prototype.isTrue = function(target, eventCount, mainWindow) {
+LogOutHandler.prototype.isTrue = function(target, eventCount, mainWindow) {
     this.statsIsTrueInvokedCount++;
     var result;
     if (this.optionalIsTrueFunction == null) {
@@ -47,30 +48,30 @@ ButtonHandler.prototype.isTrue = function(target, eventCount, mainWindow) {
     return result;
 };
 
-ButtonHandler.prototype.findLogoutTitle = function(target) {
+LogOutHandler.prototype.findLogoutTitle = function(target) {
     return this.useNavBar ?
         target.frontMostApp().mainWindow().navigationBar().staticTexts()[this.titleName] :
         target.frontMostApp().mainWindow().staticTexts()[this.titleName];
 };
 
-ButtonHandler.prototype.findButton = function(target) {
+LogOutHandler.prototype.findButton = function(target) {
     return this.useNavBar ?
         target.frontMostApp().mainWindow().navigationBar().buttons()[this.closeButtonName] :
         target.frontMostApp().mainWindow().buttons()[this.closeButtonName];
 };
 
 //every checkEvery() number of events our isTrue() method will be queried.
-ButtonHandler.prototype.checkEvery = function() {
+LogOutHandler.prototype.checkEvery = function() {
     return this.checkEveryNumber;
 };
 
 // if true then after we handle an event consider the particular Monkey event handled, and don't process the other condition handlers.
-ButtonHandler.prototype.isExclusive = function() {
+LogOutHandler.prototype.isExclusive = function() {
     return true;
 };
 
 // Press our button
-ButtonHandler.prototype.handle = function(target, mainWindow) {
+LogOutHandler.prototype.handle = function(target, mainWindow) {
     this.statsHandleInvokedCount++;
     var button = this.findButton(target);
     if (button.isValid() && button.isVisible()) {
@@ -86,11 +87,11 @@ ButtonHandler.prototype.handle = function(target, mainWindow) {
     };
 };
 
-ButtonHandler.prototype.toString = function() {
-    return ["MonkeyTest::ButtonHandler(" + this.titleName, this.checkEveryNumber, this.useNavBar, ")"].join();
+LogOutHandler.prototype.toString = function() {
+    return ["MonkeyTest::LogOutHandler(" + this.titleName, this.checkEveryNumber, this.useNavBar, ")"].join();
 };
 
-ButtonHandler.prototype.logStats = function() {
+LogOutHandler.prototype.logStats = function() {
     UIALogger.logDebug([this.toString(),
         "IsTrueInvokedCount", this.statsIsTrueInvokedCount,
         "IsTrueReturnedTrue", this.statsIsTrueReturnedTrue,
