@@ -41,10 +41,11 @@ monkey.config.frame = {
 //UI Holes handlers
 var handlers = [];
 //设置点击关闭和返回的次数，value越大权重越低
-handlers.push(new ButtonHandler("nav back", 100, true));
-handlers.push(new ButtonHandler("nav back", 101, true));
-handlers.push(new ButtonHandler("关闭", 25, true));
-handlers.push(new ButtonHandler("首页", 50, false, 1));
+handlers.push(new ButtonHandler("nav back", 50, true));
+handlers.push(new ButtonHandler("nav back", 51, true));
+handlers.push(new ButtonHandler("nav back", 52, true));
+handlers.push(new ButtonHandler("关闭", 20, true));
+handlers.push(new ButtonHandler("首页", , false, 1));
 //进入我的账号页面就点返回按钮
 handlers.push(new LogOutHandler("我的账号",true,"nav back"));
 
