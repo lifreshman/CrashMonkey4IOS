@@ -18,6 +18,7 @@ function LogOutHandler(titleName, useNavBar, closeButtonName) {
     this.useNavBar = useNavBar;
     this.checkEveryNumber = 1;
     this.closeButtonName = closeButtonName;
+    this.optionalIsTrueFunction = null;
     //stats
     this.statsIsTrueInvokedCount = 0;
     this.statsIsTrueReturnedTrue = 0;
