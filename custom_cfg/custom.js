@@ -2,6 +2,7 @@
 #import "handler/buttonHandler.js"
 #import "handler/wbScrollViewButtonHandler.js"
 #import "tuneup/tuneup.js"
+#import "handler/logoutHandler.js"
 
 // Configure the monkey: use the default configuration but a bit tweaked
 monkey = new UIAutoMonkey();
@@ -40,8 +41,10 @@ monkey.config.frame = {
 //UI Holes handlers
 var handlers = [];
 //设置点击关闭和返回的次数，value越大权重越低
-handlers.push(new ButtonHandler("nav back", 8, true));
-handlers.push(new ButtonHandler("关闭", 10, true));
+handlers.push(new ButtonHandler("nav back", 50, true));
+handlers.push(new ButtonHandler("关闭", 50, true));
+//进入我的账号页面就点返回按钮
+handlers.push(new LogOutHandler("我的账号",true,"nav back"));
 
 monkey.config.conditionHandlers = handlers;
 
