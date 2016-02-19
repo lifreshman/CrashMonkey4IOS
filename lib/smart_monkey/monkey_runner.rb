@@ -154,8 +154,6 @@ module UIAutoMonkey
 
     def all_tests_ok?(result_list)
       res = result_list.select {|r| !r[:ok]}.empty?
-      puts "Monkey result:#{res}"
-      3
     end
 
     def show_config
