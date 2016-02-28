@@ -219,8 +219,6 @@ module UIAutoMonkey
     end
 
     def find_device(device)
-      puts '--------debug--------'
-      puts `"instruments" -s devices | grep "#{device}"`
       device_line = `"instruments" -s devices | grep "#{device}"`.strip.split(/\n/)[0]
       if device_line.nil?
         puts "Invalid device, Please given a vaild device!"

@@ -26,7 +26,15 @@
 //  handlers.push(new ButtonHandler("Done", handlerInterval, false));  //every 20 events, press "Done" button if found as a top level button (no nav bar). 
 //  ...
 //  config.conditionHandlers = handlers
-//  optionalEventType：0<->back;  1<->我的；
+//	buttonName：按钮的名称；
+//	checkEveryNumber：点击的权重；
+//  useNavBar：是否是在导航栏上的按钮，是传true；不是导航栏上按钮传false；
+//  optionalEventType：0<->back（导航栏上的按钮）;  1<->我的（底部tab上的按钮）；
+//  调用的逻辑是先判断handlers里面的元素数量，有的话才会处理ButtonHandler。会先判断istrue是否为真，为真的话才会执行handler,
+//  所以istrue和handle是自定义必须处理的两个地方
+
+var target = UIATarget.localTarget();
+
 function ButtonHandler(buttonName, checkEveryNumber, useNavBar, optionalEventType, optionalIsTrueFunction) {
 	this.buttonName = buttonName;
 	this.checkEveryNumber = checkEveryNumber || 10;
@@ -43,63 +51,98 @@ function ButtonHandler(buttonName, checkEveryNumber, useNavBar, optionalEventTyp
 	this.statsHandleInvokedCount = 0;
 	this.statsHandleNotValidAndVisibleCount = 0;
 	this.statsHandleErrorCount = 0;
+
+	this.statsBackToMainPage = 0;
 }
 
 // return true if we our button is visible 
 ButtonHandler.prototype.isTrue = function(target, eventCount, mainWindow) {
 	this.statsIsTrueInvokedCount++;
 	var result;
-	if (this.optionalIsTrueFunction == null) {
+	if (this.statsBackToMainPage){
+		result = 1;
+	}else if (this.optionalIsTrueFunction == null) {
 		var aButton = this.findButton(target);
-        // result = aButton.isNotNil() && aButton.validAndVisible();
-        result = aButton.isNotNil() && aButton.isValid() && aButton.isVisible();
-    } else {
-	    result = this.optionalIsTrueFunction(target, eventCount, mainWindow);
-    }
-    if (result) {
-	  this.statsIsTrueReturnedTrue++;
-    } else {
-	  this.statsIsTrueReturnedFalse++;
-    };
-    return result;
+		// result = aButton.isNotNil() && aButton.validAndVisible();
+		result = aButton.isNotNil() && aButton.isValid() && aButton.isVisible();
+	} else {
+		result = this.optionalIsTrueFunction(target, eventCount, mainWindow);
+	}
+	if (result) {
+		this.statsIsTrueReturnedTrue++;
+	} else {
+		this.statsIsTrueReturnedFalse++;
+	}
+	return result;
 };
 
 ButtonHandler.prototype.findButton = function(target) {
 	switch(this.optionalEventType){
 		case 0:
-			return this.useNavBar ? 
-	    target.frontMostApp().mainWindow().navigationBar().buttons()[this.buttonName] :
-        target.frontMostApp().mainWindow().buttons()[this.buttonName];
-        break;
-        case 1:
-        	return target.frontMostApp().tabBar().buttons()[this.buttonName];
-        	break;        
-	}		
+			return this.useNavBar ?
+				target.frontMostApp().mainWindow().navigationBar().buttons()[this.buttonName] :
+				target.frontMostApp().mainWindow().buttons()[this.buttonName];
+			break;
+		case 1:
+			return target.frontMostApp().tabBar().buttons()[this.buttonName];
+			break;
+	}
 };
-	
+
 //every checkEvery() number of events our isTrue() method will be queried.
 ButtonHandler.prototype.checkEvery = function() {
-    return this.checkEveryNumber;
+	return this.checkEveryNumber;
 };
 
 // if true then after we handle an event consider the particular Monkey event handled, and don't process the other condition handlers.
 ButtonHandler.prototype.isExclusive = function() {
-    return true;
+	return true;
+};
+
+//返回到工作台首页，避免进入某个页面死循环
+ButtonHandler.prototype.backToMainPage = function() {
+	UIALogger.logMessage("*** begin to back to main page ***");
+	var backBtn = target.frontMostApp().mainWindow().navigationBar().buttons()["nav back"];
+	var closeBtn = target.frontMostApp().mainWindow().buttons()["关闭"];
+	if(closeBtn.isVisible() && closeBtn.isValid()){
+		try{
+			closeBtn.tap();
+		}catch(err){
+			UIALogger.logWarning(err);
+		}
+
+	}
+	while(backBtn.isVisible() && backBtn.isValid()){
+		try{
+			backBtn.tap();
+			target.delay(2);
+			backBtn = target.frontMostApp().mainWindow().navigationBar().buttons()["nav back"];
+		}catch(err){
+			UIALogger.logWarning(err);
+		}
+	}
+
+	UIALogger.logMessage("*** success end to back to main page ***");
 };
 
 // Press our button
 ButtonHandler.prototype.handle = function(target, mainWindow) {
 	this.statsHandleInvokedCount++;
+
+	if(this.statsBackToMainPage == 1){
+		this.backToMainPage();
+		return;
+	}
 	var button = this.findButton(target);
 	if (button.isValid() && button.isVisible()) {
 		try{
-		    button.tap();
+			button.tap();
 		} catch(err) {
 			this.statsHandleErrorCount++;
 			UIALogger.logWarning(err);
 		}
-	} else {
-		this.statsHandleNotValidAndVisibleCount++
+	}else {
+		this.statsHandleNotValidAndVisibleCount++;
 		//UIALogger.logWarning(this.toString() + " button is not validAndVisible");
 	};
 };
@@ -110,7 +153,7 @@ ButtonHandler.prototype.toString = function() {
 
 ButtonHandler.prototype.logStats = function() {
 	UIALogger.logDebug([this.toString(),
-	    "IsTrueInvokedCount", this.statsIsTrueInvokedCount,
+		"IsTrueInvokedCount", this.statsIsTrueInvokedCount,
 		"IsTrueReturnedTrue", this.statsIsTrueReturnedTrue,
 		"IsTrueReturnedFalse", this.statsIsTrueReturnedFalse,
 		"HandleInvokedCount", this.statsHandleInvokedCount,
