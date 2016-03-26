@@ -42,18 +42,18 @@ monkey.config.frame = {
 var handlers = [];
 //设置点击关闭和返回的次数，value越大权重越低
 
-handlers.push(new ButtonHandler("nav back", 100, true));
-handlers.push(new ButtonHandler("nav back", 101, true));
-handlers.push(new ButtonHandler("nav back", 102, true));
-handlers.push(new ButtonHandler("关闭", 60, true));
-handlers.push(new ButtonHandler("首页", 25, false, 1));
-handlers.push(new ButtonHandler("消息", 200, false, 1));
-handlers.push(new ButtonHandler("我的", 200, false, 1));
+handlers.push(new ButtonHandler("nav back", 30, true));
+handlers.push(new ButtonHandler("nav back", 31, true));
+handlers.push(new ButtonHandler("nav back", 32, true));
+handlers.push(new ButtonHandler("关闭", 20, true));
+handlers.push(new ButtonHandler("首页", 5, false, 1));
+handlers.push(new ButtonHandler("消息", 300, false, 1));
+handlers.push(new ButtonHandler("我的", 100, false, 1));
 
 handlers.push(new ButtonHandler("完成",10,false));
 
 //返回一直到首页
-backToMainHandler = new ButtonHandler("返回一直到首页",200,false);
+backToMainHandler = new ButtonHandler("返回一直到首页",100,false);
 backToMainHandler.statsBackToMainPage = 1;
 handlers.push(backToMainHandler);
 
