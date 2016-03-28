@@ -103,22 +103,33 @@ ButtonHandler.prototype.isExclusive = function() {
 ButtonHandler.prototype.backToMainPage = function() {
 	UIALogger.logMessage("*** begin to back to main page ***");
 	var backBtn = target.frontMostApp().mainWindow().navigationBar().buttons()["nav back"];
-	var closeBtn = target.frontMostApp().mainWindow().buttons()["关闭"];
-	if(closeBtn.isVisible() && closeBtn.isValid()){
-		try{
-			closeBtn.tap();
-		}catch(err){
-			UIALogger.logWarning(err);
-		}
+	var closeBtn;
+	var backCount = 0;
 
-	}
-	while(backBtn.isVisible() && backBtn.isValid()){
+	while(backBtn.isVisible() && backBtn.isValid() && backBtn.isEnabled()){
 		try{
+			if (backCount > 6){
+				break;
+			}
+			backCount++;
+
 			backBtn.tap();
 			target.delay(2);
+
+			closeBtn = target.frontMostApp().mainWindow().navigationBar().buttons()["关闭"];
+			if(closeBtn.isVisible() && closeBtn.isValid()){
+				try{
+					closeBtn.tap();
+				}catch(err){
+					UIALogger.logWarning(err);
+				}
+
+			}
+			target.delay(2)
 			backBtn = target.frontMostApp().mainWindow().navigationBar().buttons()["nav back"];
 		}catch(err){
 			UIALogger.logWarning(err);
+			break;
 		}
 	}
 

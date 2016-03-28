@@ -16,7 +16,7 @@
     </EXTENSION>
     <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
     <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/bin/smart_monkey" />
-    <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="-a com.meituan.imerchantbiz -w a723660e176d1acbe9d6ea41f0be9e30e57997f9 -c $MODULE_DIR$/custom_cfg --event-number 600" />
+    <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="-a com.meituan.imerchantbiz -w E797DD36-B9E5-4440-AA53-4EAE55B8F648 -c $MODULE_DIR$/custom_cfg --event-number 600" />
     <method />
   </configuration>
 </component>
