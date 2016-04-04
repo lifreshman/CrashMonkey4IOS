@@ -225,7 +225,7 @@ module UIAutoMonkey
         puts `"instruments" -s devices`
         exit(1)
       end
-      device_line.strip.split("[")[1].delete "]"
+      device_line.strip.split("[")[1].split("]")[0]
     end
 
     def instruments_deviceinfo(device)
