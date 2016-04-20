@@ -36,6 +36,8 @@ module UIAutoMonkey
 
     def relaunch_app(device,app)
       puts "is simulator #{is_simulator}"
+      puts "device is #{device}"
+      puts "app is #{app}"
       if is_simulator
         `xcrun simctl launch #{device}  #{app} >/dev/null 2>&1 &`
       else
